@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Notion Widgets</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 2em;
+      font-family: sans-serif;
+      background: #f4f4f4;
+      color: #333;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 0.5em;
+    }
+    p {
+      margin-bottom: 2em;
+    }
+    .widget-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1em;
+    }
+    .widget-item {
+      background: white;
+      padding: 1em 2em;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      text-decoration: none;
+      color: #333;
+      transition: transform 0.2s ease;
+    }
+    .widget-item:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <h1>✨ My Notion Widgets</h1>
+  <p>Select a widget below to embed in your Notion page:</p>
+
+  <div class="widget-list">
+    <a href="./clock/" class="widget-item">🕒 Clock Widget</a>
+    <a href="./countdown/" class="widget-item">⏳ Countdown Timer</a>
+    <a href="./weather/" class="widget-item">🌤️ Weather Widget</a>
+  </div>
+</body>
+</html>

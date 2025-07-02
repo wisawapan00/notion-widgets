@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Tracker</title>
+  <style>
+    body {
+      background: #f7f7f7;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2em;
+      text-align: left;
+    }
+    h1 {
+      margin-bottom: 1em;
+    }
+    .task {
+      background: #fff;
+      padding: 1em;
+      margin: 0.5em 0;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 300px;
+      display: flex;
+      align-items: center;
+    }
+    input[type="checkbox"] {
+      margin-right: 1em;
+      transform: scale(1.3);
+    }
+  </style>
+</head>
+<body>
+  <h1>Task Tracker</h1>
+
+  <div class="task"><input type="checkbox"/> Write daily report</div>
+  <div class="task"><input type="checkbox"/> Review goals</div>
+  <div class="task"><input type="checkbox"/> Read 30 minutes</div>
+  <div class="task"><input type="checkbox"/> Exercise</div>
+
+</body>
+</html>
