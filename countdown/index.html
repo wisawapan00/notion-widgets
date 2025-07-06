@@ -24,7 +24,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding: 0;
+            padding: 20px;
             margin: 0;
             min-height: 100vh;
         }
@@ -33,24 +33,22 @@
             max-width: 100%;
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative;
         }
 
         @media (max-width: 768px) {
             .exam-countdown {
-                padding: 40px 20px;
+                padding: 30px 20px;
             }
             
             .countdown-timer {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
             .modal-content {
                 width: 95%;
-                margin: 10% auto;
+                margin: 15% auto;
+                max-height: 60vh;
             }
             
             .modal-header {
@@ -69,11 +67,16 @@
 
         @media (max-width: 480px) {
             .countdown-timer {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
             
             .exam-countdown {
-                padding: 30px 15px;
+                padding: 25px 15px;
+            }
+            
+            .modal-content {
+                margin: 10% auto;
+                max-height: 70vh;
             }
         }
 
@@ -81,22 +84,19 @@
             background: linear-gradient(135deg, var(--accent-red), #FF8A80);
             color: white;
             text-align: center;
-            border-radius: 0;
-            padding: 60px 30px;
-            box-shadow: none;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: background 0.5s ease;
-            border: none;
-            width: 100vw;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            transition: background 0.5s ease, transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
         .exam-countdown:hover {
-            filter: brightness(1.05);
+            transform: translateY(-2px);
         }
 
         /* Dynamic background colors based on remaining time */
@@ -113,7 +113,7 @@
         }
 
         .countdown-timer {
-            font-size: 4rem;
+            font-size: 3rem;
             font-weight: 800;
             margin: 20px 0;
             font-family: 'Courier New', monospace;
@@ -123,7 +123,7 @@
         /* Modal Popup Styles */
         .modal {
             display: none;
-            position: fixed;
+            position: absolute;
             z-index: 1000;
             left: 0;
             top: 0;
@@ -135,16 +135,17 @@
 
         .modal-content {
             background-color: #fefefe;
-            margin: 5% auto;
+            margin: 20% auto;
             padding: 0;
             border-radius: 12px;
             width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
+            max-width: 450px;
+            max-height: 70vh;
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             animation: slideIn 0.3s ease;
             border: 1px solid var(--border-color);
+            position: relative;
         }
 
         .modal-header {
