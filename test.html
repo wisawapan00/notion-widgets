@@ -1,0 +1,39 @@
+.exam-countdown {
+            background: linear-gradient(135deg, var(--accent-red), #FF8A80);
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+.fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+.pulse {
+            animation: pulse 2s infinite;
+        }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+
+.countdown-timer {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 8px 0;
+        }
+
+        
+        
+<div class="container">
+  <div class="exam-countdown fade-in pulse">
+    <h3>📖 Next Exam: Advanced Calculus</h3>
+    <div class="countdown-timer" id="countdown">3 Days 14:23:45</div>
+    <p>Stay focused! You've got this! 🚀</p>
+  </div>
+</div>
