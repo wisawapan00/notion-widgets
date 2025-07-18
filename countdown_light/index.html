@@ -6,12 +6,17 @@
     <title>Exam Countdown Widget</title>
     <style>
         :root {
-            --accent-red: #FF4757;
-            --accent-orange: #FF8C00;
-            --accent-green: #2ED573;
-            --bg-color: #f7f6f3;
-            --text-color: #37352f;
-            --border-color: #e9e9e7;
+            --accent-red: #E74C3C;
+            --accent-orange: #F39C12;
+            --accent-green: #27AE60;
+            --bg-color: #FFFFFF;
+            --text-color: #2C3E50;
+            --border-color: #E1E8ED;
+            --card-bg: #F8F9FA;
+            --input-bg: #FFFFFF;
+            --modal-bg: #FFFFFF;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --hover-shadow: rgba(0, 0, 0, 0.15);
         }
 
         * {
@@ -37,15 +42,15 @@
         }
 
         .exam-countdown {
-            background: linear-gradient(135deg, var(--accent-red), #FF8A80);
+            background: linear-gradient(135deg, var(--accent-red), #EC7063);
             color: white;
             text-align: center;
             border-radius: 12px;
             padding: 40px 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px var(--shadow-color);
             cursor: pointer;
-            transition: background 0.5s ease, transform 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
             width: 100%;
             position: relative;
             overflow: hidden;
@@ -53,19 +58,20 @@
 
         .exam-countdown:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 25px var(--hover-shadow);
         }
 
         /* Dynamic background colors based on remaining time */
         .exam-countdown.green {
-            background: linear-gradient(135deg, var(--accent-green), #57DD8A);
+            background: linear-gradient(135deg, var(--accent-green), #58D68D);
         }
 
         .exam-countdown.orange {
-            background: linear-gradient(135deg, var(--accent-orange), #FFA500);
+            background: linear-gradient(135deg, var(--accent-orange), #F7DC6F);
         }
 
         .exam-countdown.red {
-            background: linear-gradient(135deg, var(--accent-red), #FF8A80);
+            background: linear-gradient(135deg, var(--accent-red), #EC7063);
         }
 
         .countdown-timer {
@@ -73,7 +79,7 @@
             font-weight: 800;
             margin: 20px 0;
             font-family: 'Courier New', monospace;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         /* Modal Popup Styles - Contained within widget */
@@ -85,13 +91,14 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.8);
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 12px;
             animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: var(--modal-bg);
             margin: 0 auto;
             padding: 0;
             border-radius: 12px;
@@ -99,7 +106,7 @@
             max-width: 400px;
             height: 100%;
             overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px var(--shadow-color);
             animation: slideIn 0.3s ease;
             border: 1px solid var(--border-color);
             position: relative;
@@ -107,7 +114,7 @@
 
         .modal-header {
             padding: 20px;
-            background: linear-gradient(135deg, var(--accent-red), #FF8A80);
+            background: linear-gradient(135deg, var(--accent-red), #EC7063);
             color: white;
             border-radius: 12px 12px 0 0;
             text-align: center;
@@ -116,6 +123,8 @@
 
         .modal-body {
             padding: 20px;
+            background-color: var(--modal-bg);
+            border-radius: 0 0 12px 12px;
         }
 
         .close {
@@ -128,6 +137,7 @@
             cursor: pointer;
             z-index: 1001;
             line-height: 1;
+            transition: opacity 0.3s ease;
         }
 
         .close:hover {
@@ -148,17 +158,18 @@
         input, textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
-            transition: border-color 0.3s;
-            background-color: #fefefe;
+            transition: all 0.3s ease;
+            background-color: var(--input-bg);
             color: var(--text-color);
         }
 
         input:focus, textarea:focus {
             outline: none;
             border-color: var(--accent-red);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
         }
 
         textarea {
@@ -175,20 +186,22 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
             margin-right: 10px;
         }
 
         .btn:hover {
-            background: #ff3838;
+            background: #C0392B;
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: #95A5A6;
+            color: white;
         }
 
         .btn-secondary:hover {
-            background: #545b62;
+            background: #7F8C8D;
         }
 
         .fade-in {
@@ -305,8 +318,23 @@
 
         .click-hint {
             font-size: 0.9rem;
-            opacity: 0.8;
+            opacity: 0.9;
             margin-top: 5px;
+        }
+
+        /* Notification styles for light theme */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-green);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
         }
     </style>
 </head>
@@ -314,10 +342,10 @@
     <div class="container">
         <!-- Countdown Display -->
         <div class="exam-countdown fade-in pulse" id="countdownDisplay" onclick="openModal()">
-            <h3 id="examTitle">📖 คลิกเพื่อตั้งเป้าหมาย</h3>
+            <h3 id="examTitle">📖 Click to Set Goal</h3>
             <div class="countdown-timer" id="countdown">--:--:--</div>
-            <p id="examDetails">คลิกที่นี่เพื่อเริ่มต้น</p>
-            <p class="click-hint">👆 คลิกเพื่อกำหนดเป้าหมาย</p>
+            <p id="examDetails">Click here to get started</p>
+            <p class="click-hint">👆 Click to set your goal</p>
         </div>
 
         <!-- Modal Popup - Now contained within the widget -->
@@ -325,28 +353,28 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="close" id="closeModal">&times;</span>
-                    <h3>🎯 กำหนดเป้าหมาย</h3>
+                    <h3>🎯 Set Your Goal</h3>
                 </div>
                 <div class="modal-body">
                     <form id="examFormData">
                         <div class="form-group">
-                            <label for="examName">ชื่อเป้าหมาย:</label>
-                            <input type="text" id="examName" placeholder="เช่น การสอบ, วันเกิด, งานสำคัญ" required>
+                            <label for="examName">Goal Name:</label>
+                            <input type="text" id="examName" placeholder="e.g., Exam, Birthday, Important Event" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="examDate">วันที่เป้าหมาย:</label>
+                            <label for="examDate">Target Date:</label>
                             <input type="datetime-local" id="examDate" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="examDescription">ข้อความกำลังใจ:</label>
+                            <label for="examDescription">Motivational Message:</label>
                             <textarea id="examDescription" placeholder="Stay focused! You've got this! 🚀"></textarea>
                         </div>
                         
                         <div style="text-align: center; margin-top: 20px;">
-                            <button type="submit" class="btn">💾 เริ่มนับถอยหลัง</button>
-                            <button type="button" class="btn btn-secondary" id="cancelBtn">❌ ยกเลิก</button>
+                            <button type="submit" class="btn">💾 Start Countdown</button>
+                            <button type="button" class="btn btn-secondary" id="cancelBtn">❌ Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -437,7 +465,7 @@
             }
             countdownInterval = setInterval(updateCountdown, 1000);
             
-            showNotification('✅ เป้าหมายถูกกำหนดเรียบร้อยแล้ว!');
+            showNotification('✅ Goal has been set successfully!');
         }
 
         function updateCountdown() {
@@ -448,8 +476,8 @@
             
             if (!currentTarget) {
                 countdownEl.textContent = '--:--:--';
-                titleEl.textContent = '📖 คลิกเพื่อตั้งเป้าหมาย';
-                detailsEl.textContent = 'คลิกที่นี่เพื่อเริ่มต้น';
+                titleEl.textContent = '📖 Click to Set Goal';
+                detailsEl.textContent = 'Click here to get started';
                 // Reset to default color
                 countdownDisplay.className = 'exam-countdown fade-in pulse';
                 return;
@@ -463,9 +491,9 @@
             detailsEl.textContent = currentTarget.description;
             
             if (diff <= 0) {
-                countdownEl.textContent = '🎉 ถึงเวลาแล้ว!';
-                countdownEl.style.color = '#00d2d3';
-                countdownDisplay.className = 'exam-countdown fade-in pulse red';
+                countdownEl.textContent = '🎉 Time\'s Up!';
+                countdownEl.style.color = 'white';
+                countdownDisplay.className = 'exam-countdown fade-in pulse green';
                 if (countdownInterval) {
                     clearInterval(countdownInterval);
                 }
@@ -478,7 +506,7 @@
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
             
             countdownEl.style.color = 'white';
-            countdownEl.textContent = `${days} วัน ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            countdownEl.textContent = `${days} days ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             
             // Update background color based on remaining days
             let colorClass = '';
@@ -502,18 +530,7 @@
             // Create a simple notification
             const notification = document.createElement('div');
             notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--accent-red);
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                z-index: 2000;
-                animation: slideInRight 0.3s ease;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            `;
+            notification.className = 'notification';
             
             document.body.appendChild(notification);
             
