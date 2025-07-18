@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Countdown Widget</title>
+    <style>
+        :root {
+            --accent-red: #FF6B6B;
+            --accent-orange: #FFB347;
+            --accent-green: #4ECDC4;
+            --bg-color: #191919;
+            --text-color: #ffffff;
+            --border-color: #373737;
+            --card-bg: #2f2f2f;
+            --input-bg: #404040;
+            --modal-bg: #2a2a2a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+
+        .exam-countdown {
+            background: linear-gradient(135deg, var(--accent-red), #FF8A8A);
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: background 0.5s ease, transform 0.3s ease;
+            border: 1px solid var(--border-color);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exam-countdown:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Dynamic background colors based on remaining time */
+        .exam-countdown.green {
+            background: linear-gradient(135deg, var(--accent-green), #6EE7E0);
+        }
+
+        .exam-countdown.orange {
+            background: linear-gradient(135deg, var(--accent-orange), #FFCC80);
+        }
+
+        .exam-countdown.red {
+            background: linear-gradient(135deg, var(--accent-red), #FF8A8A);
+        }
+
+        .countdown-timer {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Modal Popup Styles - Contained within widget */
+        .modal {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            border-radius: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: var(--modal-bg);
+            margin: 0 auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            height: 100%;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideIn 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--accent-red), #FF8A8A);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-body {
+            padding: 20px;
+            background-color: var(--modal-bg);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            line-height: 1;
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-red);
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            background: var(--accent-red);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #ff3838;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .exam-countdown {
+                padding: 30px 20px;
+            }
+            
+            .countdown-timer {
+                font-size: 2rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                height: 100%;
+            }
+            
+            .modal-header {
+                padding: 15px;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 10px 18px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown-timer {
+                font-size: 1.5rem;
+            }
+            
+            .exam-countdown {
+                padding: 25px 15px;
+            }
+            
+            .modal-content {
+                height: 100%;
+            }
+            
+            .modal-header {
+                padding: 12px;
+            }
+            
+            .modal-body {
+                padding: 12px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            input, textarea {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        .click-hint {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Countdown Display -->
+        <div class="exam-countdown fade-in pulse" id="countdownDisplay" onclick="openModal()">
+            <h3 id="examTitle">📖 Click to Set Goal</h3>
+            <div class="countdown-timer" id="countdown">--:--:--</div>
+            <p id="examDetails">Click here to get started</p>
+            <p class="click-hint">👆 Click to set your goal</p>
+        </div>
+
+        <!-- Modal Popup - Now contained within the widget -->
+        <div id="examModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close" id="closeModal">&times;</span>
+                    <h3>🎯 Set Your Goal</h3>
+                </div>
+                <div class="modal-body">
+                    <form id="examFormData">
+                        <div class="form-group">
+                            <label for="examName">Goal Name:</label>
+                            <input type="text" id="examName" placeholder="e.g., Exam, Birthday, Important Event" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="examDate">Target Date:</label>
+                            <input type="datetime-local" id="examDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="examDescription">Motivational Message:</label>
+                            <textarea id="examDescription" placeholder="Stay focused! You've got this! 🚀"></textarea>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button type="submit" class="btn">💾 Start Countdown</button>
+                            <button type="button" class="btn btn-secondary" id="cancelBtn">❌ Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use in-memory storage for data persistence
+        let currentTarget = null;
+        let countdownInterval = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTarget();
+            setupEventListeners();
+            updateCountdown();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('cancelBtn').addEventListener('click', closeModal);
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+            document.getElementById('examFormData').addEventListener('submit', saveTarget);
+            
+            // Close modal when clicking outside the content
+            document.getElementById('examModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+
+            // ESC key to close modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('examModal').style.display === 'block') {
+                    closeModal();
+                }
+            });
+        }
+
+        function openModal() {
+            const modal = document.getElementById('examModal');
+            
+            // If there's a current target, fill the form
+            if (currentTarget) {
+                document.getElementById('examName').value = currentTarget.name;
+                document.getElementById('examDate').value = currentTarget.date.toISOString().slice(0,16);
+                document.getElementById('examDescription').value = currentTarget.description;
+            } else {
+                // Set default date/time to current time
+                const now = new Date();
+                const isoString = now.toISOString().slice(0,16);
+                document.getElementById('examDate').value = isoString;
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('examModal');
+            modal.style.display = 'none';
+            
+            // Reset form only if no current target
+            if (!currentTarget) {
+                document.getElementById('examFormData').reset();
+            }
+        }
+
+        function saveTarget(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('examName').value;
+            const date = document.getElementById('examDate').value;
+            const description = document.getElementById('examDescription').value;
+            
+            const target = {
+                name: name,
+                date: new Date(date),
+                description: description || 'Stay focused! You\'ve got this! 🚀'
+            };
+            
+            currentTarget = target;
+            closeModal();
+            updateCountdown();
+            
+            // Start countdown interval
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            countdownInterval = setInterval(updateCountdown, 1000);
+            
+            showNotification('✅ Goal has been set successfully!');
+        }
+
+        function updateCountdown() {
+            const countdownEl = document.getElementById('countdown');
+            const titleEl = document.getElementById('examTitle');
+            const detailsEl = document.getElementById('examDetails');
+            const countdownDisplay = document.getElementById('countdownDisplay');
+            
+            if (!currentTarget) {
+                countdownEl.textContent = '--:--:--';
+                titleEl.textContent = '📖 Click to Set Goal';
+                detailsEl.textContent = 'Click here to get started';
+                // Reset to default color
+                countdownDisplay.className = 'exam-countdown fade-in pulse';
+                return;
+            }
+            
+            const now = new Date();
+            const targetDate = new Date(currentTarget.date);
+            const diff = targetDate - now;
+            
+            titleEl.textContent = `📖 ${currentTarget.name}`;
+            detailsEl.textContent = currentTarget.description;
+            
+            if (diff <= 0) {
+                countdownEl.textContent = '🎉 Time\'s Up!';
+                countdownEl.style.color = '#4ECDC4';
+                countdownDisplay.className = 'exam-countdown fade-in pulse red';
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            countdownEl.style.color = 'white';
+            countdownEl.textContent = `${days} days ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update background color based on remaining days
+            let colorClass = '';
+            if (days > 7) {
+                colorClass = 'green';
+            } else if (days > 3) {
+                colorClass = 'orange';
+            } else {
+                colorClass = 'red';
+            }
+            
+            countdownDisplay.className = `exam-countdown fade-in pulse ${colorClass}`;
+        }
+
+        function loadSavedTarget() {
+            // In this version, we start with no saved target
+            // You can implement localStorage here if needed
+        }
+
+        function showNotification(message) {
+            // Create a simple notification
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--accent-red);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 2000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Clean up interval when page unloads
+        window.addEventListener('beforeunload', function() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+        });
+    </script>
+</body>
+</html>
